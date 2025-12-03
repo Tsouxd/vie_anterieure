@@ -3,10 +3,10 @@
 header('Content-Type: application/json');
 
 // --- CONFIGURATION ---
-$host = '127.0.0.1';
-$dbname = 'vie_anterieure_bdd'; 
-$user = 'root';                
-$pass = '';                    
+$host = 'sql100.infinityfree.com';
+$dbname = 'if0_40584972_vie_anterieure_bdd'; 
+$user = 'if0_40584972';                
+$pass = 'f50GqtmRPx2';                 
 // ---------------------
 
 try {
