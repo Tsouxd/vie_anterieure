@@ -414,21 +414,24 @@
       const winner = Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
       const result = archetypes[winner];
       
-      // ENVOI DES DONNÉES À LA BDD
+      // ENVOI DES DONNÉES COMPLÈTES À LA BDD
       fetch('save_result.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
             username: currentUser.name,
             email: currentUser.email,
-            archetype: winner 
+            archetype: winner,
+            // On ajoute les traits et les axes ici :
+            traits: result.traits,       
+            work_axes: result.workAxes
         })
       })
       .then(res => res.json())
-      .then(data => console.log('Enregistré:', data))
+      .then(data => console.log('Enregistré avec succès:', data))
       .catch(err => console.error('Erreur:', err));
 
-      // Affichage
+      // Affichage (Le reste ne change pas)
       document.getElementById('quiz').classList.add('hidden');
       document.getElementById('result').classList.remove('hidden');
       document.getElementById('result').classList.add('fade-in');
