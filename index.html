@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quelle était votre vie antérieure ? | Quiz Mystique</title>
+  <meta name="description" content="Découvrez l'archétype qui définissait votre essence dans une vie passée.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --background: 240 10% 3.9%;
+      --foreground: 0 0% 98%;
+      --card: 240 10% 3.9%;
+      --primary: 263 70% 50%;
+      --primary-foreground: 0 0% 98%;
+      --secondary: 320 65% 52%;
+      --muted: 240 3.7% 15.9%;
+      --muted-foreground: 240 5% 64.9%;
+      --border: 240 3.7% 15.9%;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: hsl(var(--background));
+      color: hsl(var(--foreground));
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    .container {
+      max-width: 48rem;
+      width: 100%;
+      text-align: center;
+    }
+
+    .font-serif { font-family: 'Playfair Display', serif; }
+
+    .text-gradient {
+      background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .card {
+      background: hsl(var(--card));
+      border: 1px solid hsl(var(--border));
+      border-radius: 0.75rem;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (min-width: 768px) { .card { padding: 2rem; } }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 2rem;
+      border-radius: 0.5rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      font-size: 1rem;
+    }
+
+    .btn-primary {
+      background: hsl(var(--primary));
+      color: hsl(var(--primary-foreground));
+      box-shadow: 0 0 20px hsl(var(--primary) / 0.4);
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+      transform: scale(1.02);
+      box-shadow: 0 0 30px hsl(var(--primary) / 0.6);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid hsl(var(--border));
+      color: hsl(var(--foreground));
+      width: 100%;
+      text-align: left;
+      justify-content: flex-start;
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+    }
+
+    @media (min-width: 768px) {
+      .btn-outline { padding: 1rem 1.5rem; font-size: 1rem; }
+    }
+
+    .btn-outline:hover {
+      background: hsl(var(--primary) / 0.1);
+      border-color: hsl(var(--primary));
+      transform: scale(1.02);
+    }
+
+    .progress-bar {
+      height: 0.5rem;
+      background: hsl(var(--muted));
+      border-radius: 9999px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--secondary)));
+      transition: width 0.5s ease;
+    }
+
+    .option-letter {
+      color: hsl(var(--primary));
+      font-weight: 600;
+      margin-right: 0.5rem;
+      flex-shrink: 0;
+    }
+
+    .options-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    @media (min-width: 768px) { .options-list { gap: 1rem; } }
+
+    .question-text { font-size: 1.25rem; margin-bottom: 1.5rem; line-height: 1.6; }
+    @media (min-width: 768px) { .question-text { font-size: 1.5rem; margin-bottom: 2rem; } }
+
+    .text-muted { color: hsl(var(--muted-foreground)); }
+    .text-primary { color: hsl(var(--primary)); }
+    .text-sm { font-size: 0.875rem; }
+    .mb-4 { margin-bottom: 1rem; }
+    .mb-6 { margin-bottom: 1.5rem; }
+    .hidden { display: none; }
+
+    .trait-item {
+      display: flex; align-items: center; gap: 0.75rem; padding: 1rem;
+      background: hsl(var(--muted) / 0.3); border: 1px solid hsl(var(--border) / 0.5); border-radius: 0.5rem;
+    }
+
+    .trait-dot {
+      width: 0.5rem; height: 0.5rem; border-radius: 50%;
+      background: hsl(var(--primary)); box-shadow: 0 0 10px hsl(var(--primary) / 0.5);
+    }
+
+    .traits-grid { display: grid; gap: 1rem; }
+    @media (min-width: 768px) { .traits-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .axis-item {
+      display: flex; gap: 1rem; padding: 1.5rem;
+      background: linear-gradient(90deg, hsl(var(--muted) / 0.4), transparent);
+      border: 1px solid hsl(var(--border) / 0.5); border-radius: 0.5rem; text-align: left;
+    }
+
+    .axis-number {
+      width: 2.5rem; height: 2.5rem; border-radius: 50%;
+      background: hsl(var(--primary) / 0.2); border: 2px solid hsl(var(--primary));
+      display: flex; align-items: center; justify-content: center;
+      color: hsl(var(--primary)); font-weight: bold; flex-shrink: 0;
+    }
+
+    .section-title { font-size: 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; text-align: left; }
+
+    h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+    @media (min-width: 768px) { h1 { font-size: 3.5rem; } }
+
+    .fade-in { animation: fadeIn 0.5s ease-out; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .sparkle { color: hsl(var(--primary)); }
+
+    /* NOUVEAUX STYLES POUR LE FORMULAIRE */
+    .form-group {
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: hsl(var(--muted-foreground));
+      font-size: 0.9rem;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      background: hsl(var(--muted) / 0.5);
+      border: 1px solid hsl(var(--border));
+      border-radius: 0.5rem;
+      color: hsl(var(--foreground));
+      font-family: inherit;
+      font-size: 1rem;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: hsl(var(--primary));
+      box-shadow: 0 0 0 3px hsl(var(--primary) / 0.2);
+    }
+
+    .error-msg {
+      color: #ff4d4d;
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Welcome / Login Screen -->
+    <div id="welcome" class="fade-in">
+      <p class="text-primary text-sm mb-4">✨ Quiz Mystique ✨</p>
+      <h1 class="font-serif text-gradient">Quelle était votre vie antérieure ?</h1>
+      <p class="text-muted mb-6">Entrez dans le cercle sacré pour découvrir votre essence passée.</p>
+      
+      <div class="card" style="max-width: 400px; margin: 0 auto 2rem auto;">
+        <div class="form-group">
+          <label class="form-label">Votre nom mystique</label>
+          <input type="text" id="user-name" class="form-input" placeholder="Ex: Arthur Pendragon">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Votre courriel astral</label>
+          <input type="email" id="user-email" class="form-input" placeholder="Ex: arthur@camelot.com">
+        </div>
+        <div id="form-error" class="error-msg">Veuillez remplir tous les champs pour commencer.</div>
+      </div>
+
+      <button class="btn btn-primary" onclick="validateAndStart()">✨ Commencer le Quiz</button>
+    </div>
+
+    <!-- Quiz Screen -->
+    <div id="quiz" class="hidden">
+      <div class="mb-4" style="display: flex; justify-content: space-between;">
+        <span class="text-sm text-muted">Question <span id="current-q">1</span> sur <span id="total-q">30</span></span>
+        <span class="text-sm text-primary" style="font-weight: 500;"><span id="percent">0</span>%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress" style="width: 0%"></div>
+      </div>
+      <div class="card fade-in">
+        <h2 class="font-serif question-text" id="question-text"></h2>
+        <div class="options-list" id="options"></div>
+      </div>
+    </div>
+
+    <!-- Result Screen -->
+    <div id="result" class="hidden">
+      <p class="text-primary text-sm mb-4">✨ Résultats pour <span id="display-username"></span> ✨</p>
+      <h1 class="font-serif text-gradient" id="result-name"></h1>
+      <p class="text-muted mb-6" id="result-desc"></p>
+      
+      <div class="card" style="text-align: left;">
+        <h2 class="font-serif section-title"><span class="sparkle">✨</span> Vos Traits Caractéristiques</h2>
+        <div class="traits-grid" id="traits"></div>
+      </div>
+      
+      <div class="card" style="text-align: left;">
+        <h2 class="font-serif section-title"><span class="sparkle">✨</span> Vos 3 Axes de Travail</h2>
+        <div id="axes" style="display: flex; flex-direction: column; gap: 1rem;"></div>
+      </div>
+      
+      <button class="btn btn-primary" onclick="restartQuiz()">🔄 Recommencer le Quiz</button>
+    </div>
+  </div>
+
+  <script>
+    // Variable pour stocker les infos de l'utilisateur
+    let currentUser = {
+        name: '',
+        email: ''
+    };
+
+    const questions = [
+      { id: 1, text: "Face au danger, quelle est votre première réaction ?", options: [ { label: "J'affronte la menace avec courage et détermination", archetype: "Guerrier" }, { label: "Je cherche à comprendre la situation et trouve une solution intelligente", archetype: "Sage" }, { label: "J'utilise mon intuition et des méthodes mystérieuses pour me protéger", archetype: "Sorcier" }, { label: "Je fuis stratégiquement pour mieux revenir", archetype: "Explorateur" } ] },
+      { id: 2, text: "Quel est votre plus grand rêve dans la vie ?", options: [ { label: "Diriger et avoir de l'influence sur les autres", archetype: "Souverain" }, { label: "Découvrir tous les secrets et mystères de l'univers", archetype: "Sage" }, { label: "Soulager la souffrance et aider ceux qui en ont besoin", archetype: "Guérisseur" }, { label: "Vivre libre, sans contraintes ni limites", archetype: "Rebelle" } ] },
+      { id: 3, text: "Dans quel environnement vous sentez-vous le plus à votre place ?", options: [ { label: "Un château ou un palais avec du pouvoir et du prestige", archetype: "Souverain" }, { label: "Une bibliothèque remplie de livres anciens et de connaissances", archetype: "Sage" }, { label: "Une forêt mystérieuse où règne la magie", archetype: "Sorcier" }, { label: "Les routes ouvertes, toujours en mouvement vers de nouveaux horizons", archetype: "Explorateur" } ] },
+      { id: 4, text: "Comment préférez-vous résoudre un conflit ?", options: [ { label: "Par la force physique ou l'intimidation", archetype: "Guerrier" }, { label: "Par la diplomatie, le charme et la négociation", archetype: "Courtisan" }, { label: "Par la méditation et la recherche de paix intérieure", archetype: "Prêtre" }, { label: "En trouvant une échappatoire ou en contournant le problème", archetype: "Rebelle" } ] },
+      { id: 5, text: "Si vous pouviez maîtriser un talent parfaitement, lequel choisiriez-vous ?", options: [ { label: "Les arts martiaux et les techniques de combat", archetype: "Guerrier" }, { label: "La musique, la poésie et l'art de raconter des histoires", archetype: "Barde" }, { label: "Les rituels magiques et les incantations", archetype: "Sorcier" }, { label: "L'artisanat et la création d'objets magnifiques", archetype: "Artisan" } ] },
+      { id: 6, text: "Dans un groupe, quel rôle adoptez-vous naturellement ?", options: [ { label: "Le chef qui prend les décisions et donne les ordres", archetype: "Souverain" }, { label: "Le conseiller sage qui guide avec sa réflexion", archetype: "Sage" }, { label: "Le protecteur qui défend les membres du groupe", archetype: "Guerrier" }, { label: "L'âme du groupe qui remonte le moral et raconte des histoires", archetype: "Barde" } ] },
+      { id: 7, text: "Quelle phrase résonne le plus en vous ?", options: [ { label: "La connaissance est le véritable pouvoir", archetype: "Sage" }, { label: "L'amour transcende toutes les barrières", archetype: "Courtisan" }, { label: "Seul on va plus vite, ensemble on va plus loin", archetype: "Prêtre" }, { label: "Les règles sont faites pour être brisées", archetype: "Rebelle" } ] },
+      { id: 8, text: "Quel est votre rapport à la spiritualité ?", options: [ { label: "Je cherche activement l'illumination et le contact avec le divin", archetype: "Prêtre" }, { label: "Je préfère la solitude méditative loin du monde", archetype: "Ermite" }, { label: "J'utilise les forces mystiques et l'énergie universelle", archetype: "Sorcier" }, { label: "Je suis pragmatique, je crois seulement ce que je vois", archetype: "Guerrier" } ] },
+      { id: 9, text: "Qu'est-ce qui vous fait vous lever le matin avec enthousiasme ?", options: [ { label: "Le désir de vaincre et de conquérir de nouveaux défis", archetype: "Guerrier" }, { label: "La passion de créer quelque chose de beau de vos mains", archetype: "Artisan" }, { label: "Le besoin profond d'aider et de soigner les autres", archetype: "Guérisseur" }, { label: "La soif de découvrir des lieux et des expériences inconnus", archetype: "Explorateur" } ] },
+      { id: 10, text: "Comment gérez-vous vos émotions ?", options: [ { label: "Je les maîtrise complètement par la discipline mentale", archetype: "Ermite" }, { label: "Je les exprime pleinement et librement", archetype: "Courtisan" }, { label: "Je les canalise dans l'action et le mouvement", archetype: "Guerrier" }, { label: "Je les transforme en créations artistiques", archetype: "Barde" } ] },
+      { id: 11, text: "Quel type de pouvoir vous fascine le plus ?", options: [ { label: "Le pouvoir politique et l'autorité sur les autres", archetype: "Souverain" }, { label: "Le pouvoir de guérir les corps et les âmes", archetype: "Guérisseur" }, { label: "Le pouvoir occulte et les secrets mystérieux", archetype: "Sorcier" }, { label: "Le pouvoir de séduire et d'influencer par le charme", archetype: "Courtisan" } ] },
+      { id: 12, text: "Face à une grande injustice, quelle est votre réaction ?", options: [ { label: "Vous vous rebellez et luttez pour renverser le système", archetype: "Rebelle" }, { label: "Vous cherchez à réformer de l'intérieur avec sagesse", archetype: "Souverain" }, { label: "Vous offrez réconfort et soutien aux victimes", archetype: "Guérisseur" }, { label: "Vous dénoncez l'injustice par l'art et les mots", archetype: "Barde" } ] },
+      { id: 13, text: "Quelle est votre relation à l'argent et aux richesses matérielles ?", options: [ { label: "C'est un moyen de financer mes voyages et découvertes", archetype: "Explorateur" }, { label: "C'est secondaire, je cherche la richesse intérieure", archetype: "Ermite" }, { label: "C'est un outil essentiel de pouvoir et d'influence", archetype: "Souverain" }, { label: "C'est le fruit de mes échanges et de mon commerce", archetype: "Explorateur" } ] },
+      { id: 14, text: "Quel animal représente le mieux votre essence ?", options: [ { label: "Le loup solitaire qui parcourt les montagnes", archetype: "Ermite" }, { label: "Le lion majestueux, roi de la savane", archetype: "Souverain" }, { label: "L'aigle visionnaire qui voit tout d'en haut", archetype: "Sage" }, { label: "Le renard rusé qui déjoue tous les pièges", archetype: "Rebelle" } ] },
+      { id: 15, text: "Comment préférez-vous transmettre votre savoir aux autres ?", options: [ { label: "Par l'enseignement patient et structuré", archetype: "Sage" }, { label: "Par l'exemple et l'action concrète", archetype: "Guerrier" }, { label: "Par les histoires, légendes et chansons", archetype: "Barde" }, { label: "Par les rituels et l'initiation mystique", archetype: "Prêtre" } ] },
+      { id: 16, text: "Quelle est votre plus grande peur secrète ?", options: [ { label: "Perdre ma liberté et être enfermé", archetype: "Rebelle" }, { label: "Être impuissant face à la souffrance des autres", archetype: "Guérisseur" }, { label: "Perdre mon pouvoir et mon influence", archetype: "Souverain" }, { label: "Mourir sans avoir découvert la vérité ultime", archetype: "Sage" } ] },
+      { id: 17, text: "Dans quel moment vous sentez-vous le plus vivant et accompli ?", options: [ { label: "Quand vous créez quelque chose de vos propres mains", archetype: "Artisan" }, { label: "Quand vous êtes en plein combat ou compétition", archetype: "Guerrier" }, { label: "Quand vous êtes en communion spirituelle avec le divin", archetype: "Prêtre" }, { label: "Quand vous séduisez et charmez quelqu'un", archetype: "Courtisan" } ] },
+      { id: 18, text: "Quelle est votre perception du temps ?", options: [ { label: "Je vis intensément dans l'instant présent", archetype: "Courtisan" }, { label: "J'étudie le passé pour comprendre le présent", archetype: "Sage" }, { label: "Je perçois l'avenir et ses possibilités", archetype: "Sorcier" }, { label: "Le temps est une illusion, seul l'éternel compte", archetype: "Ermite" } ] },
+      { id: 19, text: "Que représente pour vous la société et la civilisation ?", options: [ { label: "Un système complexe à organiser et à gouverner", archetype: "Souverain" }, { label: "Une prison qui limite ma véritable nature", archetype: "Ermite" }, { label: "Un ordre établi qui doit être changé et défié", archetype: "Rebelle" }, { label: "Un vaste terrain d'opportunités et de découvertes", archetype: "Explorateur" } ] },
+      { id: 20, text: "Quel est votre rapport aux traditions et coutumes ancestrales ?", options: [ { label: "Je les préserve et les transmets fidèlement", archetype: "Prêtre" }, { label: "Je les étudie pour en extraire la sagesse cachée", archetype: "Sage" }, { label: "Je les défie et j'innove au-delà d'elles", archetype: "Rebelle" }, { label: "Je les respecte mais les adapte à mon époque", archetype: "Artisan" } ] },
+      { id: 21, text: "Si vous pouviez avoir un don surnaturel, lequel choisiriez-vous ?", options: [ { label: "La télépathie et le contrôle des esprits", archetype: "Sorcier" }, { label: "Le pouvoir de guérison instantanée", archetype: "Guérisseur" }, { label: "Une force physique surhumaine", archetype: "Guerrier" }, { label: "La capacité de voir l'avenir", archetype: "Sage" } ] },
+      { id: 22, text: "Quelle est votre vision de l'amour ?", options: [ { label: "Une passion dévorante et essentielle à la vie", archetype: "Courtisan" }, { label: "Un lien spirituel profond entre deux âmes", archetype: "Prêtre" }, { label: "Une distraction qui détourne de ma mission", archetype: "Guerrier" }, { label: "Un art subtil à maîtriser et à célébrer", archetype: "Barde" } ] },
+      { id: 23, text: "Face à un phénomène mystérieux et inexplicable, que faites-vous ?", options: [ { label: "Je cherche l'explication rationnelle et scientifique", archetype: "Sage" }, { label: "J'accepte le mystère comme partie du plan divin", archetype: "Prêtre" }, { label: "J'utilise mes connaissances magiques pour le comprendre", archetype: "Sorcier" }, { label: "Je pars à l'aventure pour l'explorer directement", archetype: "Explorateur" } ] },
+      { id: 24, text: "Quelle est selon vous votre plus grande qualité ?", options: [ { label: "Mon courage inébranlable face à l'adversité", archetype: "Guerrier" }, { label: "Ma compassion infinie envers tous les êtres", archetype: "Guérisseur" }, { label: "Mon esprit créatif et mon ingéniosité", archetype: "Artisan" }, { label: "Mon charisme naturel et mon pouvoir de séduction", archetype: "Courtisan" } ] },
+      { id: 25, text: "Si vous deviez choisir une vie simple et modeste, ce serait...", options: [ { label: "Ermite solitaire en haut d'une montagne", archetype: "Ermite" }, { label: "Artisan humble dans un petit village", archetype: "Artisan" }, { label: "Voyageur perpétuel sans attaches", archetype: "Explorateur" }, { label: "Impossible ! Je refuse la simplicité et la médiocrité", archetype: "Souverain" } ] },
+      { id: 26, text: "Quelle est votre relation avec la mort ?", options: [ { label: "Elle fait partie du cycle naturel de la vie", archetype: "Guérisseur" }, { label: "Je la combats et la défie jusqu'au bout", archetype: "Guerrier" }, { label: "C'est une porte mystique vers un autre monde", archetype: "Sorcier" }, { label: "Je préfère ne pas trop y penser et profiter de la vie", archetype: "Explorateur" } ] },
+      { id: 27, text: "Quel héritage souhaitez-vous laisser après votre passage sur terre ?", options: [ { label: "Des œuvres d'art immortelles et magnifiques", archetype: "Artisan" }, { label: "Un empire prospère ou une dynastie puissante", archetype: "Souverain" }, { label: "Des connaissances précieuses et des enseignements", archetype: "Sage" }, { label: "Une révolution sociale qui change le monde", archetype: "Rebelle" } ] },
+      { id: 28, text: "Quelle est votre méthode d'apprentissage préférée ?", options: [ { label: "L'étude solitaire dans les livres et manuscrits", archetype: "Sage" }, { label: "L'apprentissage par la pratique et l'expérimentation", archetype: "Artisan" }, { label: "L'enseignement direct d'un maître spirituel", archetype: "Prêtre" }, { label: "L'expérience vécue à travers les voyages", archetype: "Explorateur" } ] },
+      { id: 29, text: "Comment célébrez-vous une grande victoire ou réussite ?", options: [ { label: "Par un grand festin avec récits épiques et chansons", archetype: "Barde" }, { label: "Dans la solitude et la méditation de gratitude", archetype: "Ermite" }, { label: "En planifiant immédiatement la prochaine conquête", archetype: "Guerrier" }, { label: "En partageant ma réussite avec ceux qui en ont besoin", archetype: "Guérisseur" } ] },
+      { id: 30, text: "Quelle phrase finale résonne le plus profondément en vous ?", options: [ { label: "Je suis le créateur de ma propre destinée", archetype: "Sorcier" }, { label: "Je suis celui qui protège et guide les autres", archetype: "Guerrier" }, { label: "Je suis l'éternel chercheur de vérité et de sagesse", archetype: "Sage" }, { label: "Je suis celui qui aime, inspire et transcende", archetype: "Courtisan" } ] }
+    ];
+
+    const archetypes = {
+      Guerrier: { name: "Guerrier", description: "Vous étiez un combattant courageux, protecteur des faibles et défenseur de la justice.", traits: ["Courage inébranlable", "Force physique", "Esprit de protection", "Discipline"], workAxes: ["Canaliser votre force", "Développer la patience", "Trouver l'équilibre"] },
+      Sage: { name: "Sage", description: "Vous étiez un chercheur de vérité, un gardien du savoir ancestral.", traits: ["Soif de connaissance", "Sagesse", "Analyse profonde", "Vision"], workAxes: ["Partager le savoir", "Équilibrer l'intellect", "Agir concrètement"] },
+      Sorcier: { name: "Sorcier", description: "Vous étiez un maître des forces mystiques, manipulant les énergies invisibles.", traits: ["Connexion mystique", "Intuition puissante", "Transformation", "Cycles naturels"], workAxes: ["Servir le bien", "Humilité", "Éthique magique"] },
+      Explorateur: { name: "Explorateur", description: "Vous étiez un aventurier infatigable, toujours en quête de nouveaux horizons.", traits: ["Soif d'aventure", "Adaptabilité", "Indépendance", "Ouverture"], workAxes: ["Créer des racines", "Sagesse durable", "Persévérance"] },
+      Souverain: { name: "Souverain", description: "Vous étiez un leader né, capable de gouverner avec autorité et vision.", traits: ["Leadership", "Stratégie", "Responsabilité", "Inspiration"], workAxes: ["Servir plutôt que dominer", "Empathie", "Flexibilité"] },
+      Guérisseur: { name: "Guérisseur", description: "Vous étiez un soignant dévoué, apaisant les souffrances.", traits: ["Compassion", "Guérison", "Empathie", "Dévouement"], workAxes: ["Prendre soin de soi", "Limites saines", "Lâcher prise"] },
+      Rebelle: { name: "Rebelle", description: "Vous étiez un révolutionnaire, remettant en question l'ordre établi.", traits: ["Esprit révolutionnaire", "Audace", "Créativité", "Liberté"], workAxes: ["Changement constructif", "Sagesse des combats", "Coopération"] },
+      Courtisan: { name: "Courtisan", description: "Vous étiez un maître de l'art social, charmant et influent.", traits: ["Charisme", "Diplomatie", "Intelligence émotionnelle", "Influence"], workAxes: ["Authenticité", "Profondeur", "Sincérité"] },
+      Prêtre: { name: "Prêtre", description: "Vous étiez un guide spirituel, pont entre le divin et l'humain.", traits: ["Connexion spirituelle", "Dévotion", "Inspiration", "Sagesse"], workAxes: ["Ouverture d'esprit", "Spiritualité active", "Équilibre"] },
+      Artisan: { name: "Artisan", description: "Vous étiez un créateur talentueux, transformant la matière en beauté.", traits: ["Maîtrise technique", "Créativité", "Patience", "Détail"], workAxes: ["Partage", "Lâcher-prise", "Estime de soi"] },
+      Ermite: { name: "Ermite", description: "Vous étiez un solitaire éclairé, trouvant la sagesse dans l'isolement.", traits: ["Contemplation", "Indépendance", "Sagesse intérieure", "Clarté"], workAxes: ["Partager la sagesse", "Connexion sociale", "Intégration"] },
+      Barde: { name: "Barde", description: "Vous étiez un conteur inspiré, gardien des légendes.", traits: ["Talent artistique", "Inspiration", "Communication", "Créativité"], workAxes: ["Profondeur", "Substance", "Discipline"] }
+    };
+
+    let currentQuestion = 0;
+    let scores = {};
+    let shuffledQuestions = [];
+
+    function shuffleArray(array) {
+      const newArray = [...array];
+      for (let i = newArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+      }
+      return newArray;
+    }
+
+    // NOUVELLE FONCTION POUR VALIDER LE FORMULAIRE
+    function validateAndStart() {
+        const nameInput = document.getElementById('user-name');
+        const emailInput = document.getElementById('user-email');
+        const errorMsg = document.getElementById('form-error');
+
+        if (nameInput.value.trim() === '' || emailInput.value.trim() === '') {
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        errorMsg.style.display = 'none';
+        
+        // Stockage des infos
+        currentUser.name = nameInput.value.trim();
+        currentUser.email = emailInput.value.trim();
+
+        // Lancement du quiz
+        startQuiz();
+    }
+
+    function startQuiz() {
+      shuffledQuestions = shuffleArray(questions).map(q => ({
+        ...q,
+        options: shuffleArray(q.options)
+      }));
+      currentQuestion = 0;
+      scores = {};
+      document.getElementById('welcome').classList.add('hidden');
+      document.getElementById('quiz').classList.remove('hidden');
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = shuffledQuestions[currentQuestion];
+      const quizCard = document.querySelector('#quiz .card');
+      quizCard.classList.remove('fade-in');
+      void quizCard.offsetWidth;
+      quizCard.classList.add('fade-in');
+      
+      document.getElementById('question-text').textContent = q.text;
+      document.getElementById('current-q').textContent = currentQuestion + 1;
+      document.getElementById('total-q').textContent = shuffledQuestions.length;
+      document.getElementById('percent').textContent = Math.round(((currentQuestion + 1) / shuffledQuestions.length) * 100);
+      document.getElementById('progress').style.width = `${((currentQuestion + 1) / shuffledQuestions.length) * 100}%`;
+      
+      const optionsHtml = q.options.map((opt, i) => 
+        `<button class="btn btn-outline" onclick="answer('${opt.archetype}')">
+          <span class="option-letter">${String.fromCharCode(65 + i)}.</span>
+          <span>${opt.label}</span>
+        </button>`
+      ).join('');
+      document.getElementById('options').innerHTML = optionsHtml;
+    }
+
+    function answer(archetype) {
+      scores[archetype] = (scores[archetype] || 0) + 1;
+      currentQuestion++;
+      
+      if (currentQuestion < shuffledQuestions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      const winner = Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
+      const result = archetypes[winner];
+      
+      // ENVOI DES DONNÉES À LA BDD
+      fetch('save_result.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+            username: currentUser.name,
+            email: currentUser.email,
+            archetype: winner 
+        })
+      })
+      .then(res => res.json())
+      .then(data => console.log('Enregistré:', data))
+      .catch(err => console.error('Erreur:', err));
+
+      // Affichage
+      document.getElementById('quiz').classList.add('hidden');
+      document.getElementById('result').classList.remove('hidden');
+      document.getElementById('result').classList.add('fade-in');
+      
+      document.getElementById('display-username').textContent = currentUser.name;
+      document.getElementById('result-name').textContent = result.name;
+      document.getElementById('result-desc').textContent = result.description;
+      
+      document.getElementById('traits').innerHTML = result.traits.map(t => 
+        `<div class="trait-item"><div class="trait-dot"></div><span>${t}</span></div>`
+      ).join('');
+      
+      document.getElementById('axes').innerHTML = result.workAxes.map((a, i) => 
+        `<div class="axis-item"><div class="axis-number">${i + 1}</div><p>${a}</p></div>`
+      ).join('');
+    }
+
+    function restartQuiz() {
+      // On garde le même utilisateur pour recommencer
+      document.getElementById('result').classList.add('hidden');
+      document.getElementById('result').classList.remove('fade-in');
+      startQuiz();
+      
+      // Si vous voulez revenir au formulaire d'accueil, utilisez plutôt ceci :
+      /*
+      document.getElementById('result').classList.add('hidden');
+      document.getElementById('welcome').classList.remove('hidden');
+      document.getElementById('user-name').value = '';
+      document.getElementById('user-email').value = '';
+      */
+    }
+  </script>
+</body>
+</html>
