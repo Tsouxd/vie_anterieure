@@ -6,7 +6,7 @@ header('Content-Type: application/json');
 $host = 'sql100.infinityfree.com';
 $dbname = 'if0_40584972_vie_anterieure_bdd'; 
 $user = 'if0_40584972';                
-$pass = 'f50GqtmRPx2';                  
+$pass = 'f50GqtmRPx2';                    
 // ---------------------
 
 try {
