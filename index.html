@@ -273,6 +273,8 @@
       </div>
       
       <button class="btn btn-primary" onclick="restartQuiz()">🔄 Recommencer le Quiz</button>
+
+      <button class="btn btn-primary" onclick="printResult()">🖨️ Imprimer les résultats</button>
     </div>
   </div>
 
@@ -463,6 +465,28 @@
       document.getElementById('user-email').value = '';
       */
     }
+
+    function printResult() {
+        const resultSection = document.getElementById('result').innerHTML;
+        const printWindow = window.open('', '', 'width=800,height=600');
+        printWindow.document.write(`
+            <html>
+            <head>
+                <title>Résultats du Quiz</title>
+                <style>
+                    body { font-family: 'Inter', sans-serif; padding: 2rem; background: #fff; color: #000; }
+                    .trait-item, .axis-item { border: 1px solid #ccc; padding: 0.5rem; margin-bottom: 0.5rem; border-radius: 0.5rem; }
+                </style>
+            </head>
+            <body>${resultSection}</body>
+            </html>
+        `);
+        printWindow.document.close();
+        printWindow.focus();
+        printWindow.print();
+        printWindow.close();
+    }
+
   </script>
 </body>
 </html>
